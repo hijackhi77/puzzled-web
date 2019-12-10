@@ -5,10 +5,3 @@
   border-spacing: 0;
   display: inline-block;
 }
-.board td {
-  border: 1px solid black;
-  position: relative;
-}
-.board td:hover {
-  background-color: gray;
-}

@@ -10,11 +10,12 @@ class Game extends Component {
   };
 
   render() {
+    const { width, height } = this.state.board;
     return (
       <div className="game">
         <Board
-          width={this.state.board.width}
-          height={this.state.board.height}
+          width={width}
+          height={height}
         />
       </div>
     );

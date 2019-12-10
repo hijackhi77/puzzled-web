@@ -6,20 +6,17 @@ class PuzzlePiece extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: props.id,
       picUrl: props.picUrl
     };
   }
 
-  move = (e) => {
-    // alert('yes');
-    console.log('YES');
-  }
-
   render() {
+    console.log("PuzzlePiece::render called");
     return (
-      <div className="puzzle-piece" value={this.props.id} onClick={(e) => this.move(e)}>
-        <span>{this.props.id}</span>
+      <div className={"puzzle-piece tile" + this.props.id}
+        id={this.props.id}
+        onClick={() => { this.props.moveTile(this.props.id) }}
+      >
       </div>
     );
   }

@@ -7,10 +7,10 @@ class Header extends Component {
     return (
       <div className="header">
         <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Navbar</Navbar.Brand>
+          <Navbar.Brand href="/">Puzzled</Navbar.Brand>
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="hua-rong-dao">Hua Rong Dao</Nav.Link>
+            <Nav.Link href="hua-rong-dao">Huarong Dao</Nav.Link>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />

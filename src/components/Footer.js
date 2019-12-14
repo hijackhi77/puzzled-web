@@ -95,7 +95,7 @@ class Footer extends Component {
               </div>
               <div>
                 <a
-                  href="https://en.wikipedia.org/wiki/Eight_queens_puzzle"
+                  href="https://github.com/hijackhi77"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -104,7 +104,7 @@ class Footer extends Component {
               </div>
               <div>
                 <a
-                  href="https://en.wikipedia.org/wiki/Eight_queens_puzzle"
+                  href="https://www.linkedin.com/in/chuan-liu-jack/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

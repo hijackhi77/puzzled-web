@@ -1,0 +1,23 @@
+footer {
+  background-color: #343a40 !important;
+  color: white;
+  margin-top: 20px;
+  padding: 40px 100px;
+  position: relative;
+}
+footer .header {
+  margin-bottom: 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+footer a {
+  color: rgba(255,255,255,.5);
+}
+footer a:hover {
+  color: white;
+  text-decoration: none;
+}
+footer .copyright {
+  top: 18%;
+  position: absolute;
+}

@@ -13,7 +13,8 @@ class PuzzlePiece extends Component {
   render() {
     console.log("PuzzlePiece::render called");
     return (
-      <div className={"puzzle-piece tile" + this.props.id}
+      <div className="puzzle-piece"
+        style={this.props.tileStyle}
         id={this.props.id}
         onClick={() => { this.props.moveTile(this.props.id) }}
       >

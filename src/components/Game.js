@@ -2,21 +2,33 @@ import React, { Component } from "react";
 import Board from "./Board.js";
 
 class Game extends Component {
-  state = {
-    board: {
-      width: 3,
-      height: 3
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      boardSize: 3
+    };
+  }
+
+  setBoardSize = async e => {
+    await this.setState({ boardSize: parseInt(e.target.value) });
+    await this.refs.child.init();
   };
 
   render() {
-    const { width, height } = this.state.board;
+    const { boardSize } = this.state;
     return (
       <div className="game">
-        <Board
-          width={width}
-          height={height}
+        Size:{" "}
+        <input
+          type="range"
+          name="points"
+          min="3"
+          max="6"
+          value={boardSize}
+          onChange={this.setBoardSize}
         />
+        <span>{boardSize}</span>
+        <Board ref="child" width={boardSize} height={boardSize} />
       </div>
     );
   }

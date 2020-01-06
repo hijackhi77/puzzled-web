@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./Board.css"
+import "./Board.css";
 import PuzzlePiece from "./PuzzlePiece";
 import { deepcopy, getRandomInt } from "../lib/utils.js";
 
@@ -11,13 +11,21 @@ class Board extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: props.width,
-      height: props.height,
       solved: false,
       board: []
     };
+  }
 
-    const { width, height, board } = this.state;
+  componentDidMount = () => {
+    this.init();
+  };
+
+  init = () => {
+    const { width, height } = this.props;
+    let board = [];
+    this.tileStyles = {};
+    this.goalState = [];
+
     let id = 1;
     for (let i = 0; i < height; ++i) {
       let row = [];
@@ -25,8 +33,8 @@ class Board extends Component {
         if (i === height - 1 && j === width - 1) {
           row.push(0);
           this.tileStyles[0] = {
-            background: 'white',
-            cursor: 'default'
+            background: "white",
+            cursor: "default"
           };
         } else {
           row.push(id);
@@ -34,21 +42,22 @@ class Board extends Component {
           let x = j * weight;
           let y = i * weight;
           this.tileStyles[id] = {
-            width: 580/width,
-            height: 580/width,  
-            backgroundPosition: x+'% ' + y+'%',
-            backgroundSize: width*100+'%'
+            width: 580 / width,
+            height: 580 / width,
+            backgroundPosition: x + "% " + y + "%",
+            backgroundSize: width * 100 + "%"
           };
         }
       }
       board.push(row);
     }
     this.goalState = deepcopy(board);
-  }
+    this.setState({ board: board });
+  };
 
   getMovables = () => {
     const whiteTilePos = this.getTileById(0);
-    const { width, height } = this.state;
+    const { width, height } = this.props;
     let movables = [];
     if (whiteTilePos.row > 0) {
       movables.push({ row: whiteTilePos.row - 1, col: whiteTilePos.col });
@@ -63,14 +72,14 @@ class Board extends Component {
       movables.push({ row: whiteTilePos.row, col: whiteTilePos.col + 1 });
     }
     return movables;
-  }
+  };
 
-  isMovable = (pos) => {
+  isMovable = pos => {
     let movables = this.getMovables();
-    return movables.some((e) => {
-      return e.row === pos.row && e.col === pos.col
+    return movables.some(e => {
+      return e.row === pos.row && e.col === pos.col;
     });
-  }
+  };
 
   swapTiles = (pos1, pos2) => {
     let board = deepcopy(this.state.board);
@@ -78,10 +87,11 @@ class Board extends Component {
     board[pos1.row][pos1.col] = board[pos2.row][pos2.col];
     board[pos2.row][pos2.col] = temp;
     this.setState({ board });
-  }
+  };
 
-  getTileById = (id) => {
-    const { width, height, board } = this.state;
+  getTileById = id => {
+    const { board } = this.state;
+    const { width, height } = this.props;
     for (let i = 0; i < height; ++i) {
       for (let j = 0; j < width; ++j) {
         if (board[i][j] === id) {
@@ -90,18 +100,18 @@ class Board extends Component {
       }
     }
     return null;
-  }
+  };
 
-  moveTile = async (id) => {
+  moveTile = async id => {
     if (id === 0) return;
     let pos = this.getTileById(id);
     if (!this.isMovable(pos)) return;
     await this.swapTiles(pos, this.getTileById(0));
     this.setState({ solved: this.isGoalState() });
-  }
+  };
 
   shuffle = () => {
-    const { width, height } = this.state;
+    const { width, height } = this.props;
     let boardCopy = deepcopy(this.state.board);
     for (let row = 0; row < height; ++row) {
       for (let col = 0; col < width; ++col) {
@@ -113,10 +123,11 @@ class Board extends Component {
       }
     }
     this.setState({ board: boardCopy });
-  }
+  };
 
   isGoalState = () => {
-    const { width, height, board } = this.state;
+    const { board } = this.state;
+    const { width, height } = this.props;
     for (let i = 0; i < height; ++i) {
       for (let j = 0; j < width; ++j) {
         if (this.goalState[i][j] !== board[i][j]) {
@@ -125,11 +136,9 @@ class Board extends Component {
       }
     }
     return true;
-  }
+  };
 
   render() {
-    console.log("Board::render called");
-
     const { board, solved } = this.state;
     let rows = board.map((cells, i) => {
       let row = cells.map((cell, j) => {
@@ -143,25 +152,31 @@ class Board extends Component {
           </td>
         );
       });
-      return (<tr key={i}>{row}</tr>);
+      return <tr key={i}>{row}</tr>;
     });
 
-    let successScreen = '';
+    let successScreen = "";
     if (solved) {
       successScreen = (
         <div>
           <h2>Puzzle Solved</h2>
         </div>
-      )
+      );
     }
-    
+
     return (
-      <div className="board" >
+      <div className="board">
         <table>
           <tbody>{rows}</tbody>
         </table>
         <br />
-        <button onClick={() => { this.shuffle() }}>Reset Puzzle</button>
+        <button
+          onClick={() => {
+            this.shuffle();
+          }}
+        >
+          Reset Puzzle
+        </button>
         {successScreen}
       </div>
     );

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./PuzzlePiece.css"
+import "./PuzzlePiece.css";
 
 class PuzzlePiece extends Component {
   constructor(props) {
@@ -11,14 +11,15 @@ class PuzzlePiece extends Component {
   }
 
   render() {
-    console.log("PuzzlePiece::render called");
     return (
-      <div className="puzzle-piece"
+      <div
+        className="puzzle-piece"
         style={this.props.tileStyle}
         id={this.props.id}
-        onClick={() => { this.props.moveTile(this.props.id) }}
-      >
-      </div>
+        onClick={() => {
+          this.props.moveTile(this.props.id);
+        }}
+      ></div>
     );
   }
 }

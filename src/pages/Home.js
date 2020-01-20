@@ -9,7 +9,7 @@ class Home extends Component {
     return (
       <>
         <Header />
-        <Game />
+        <Game boardType="puzzle" />
         <Footer />
       </>
     );

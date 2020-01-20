@@ -2,18 +2,18 @@ import React, { Component } from "react";
 import Header from "../components/Header";
 import Game from "../components/Game";
 import Footer from "../components/Footer";
-import "./HuaRongDao.css";
+import "./HuarongDao.css";
 
-class HuaRongDao extends Component {
+class HuarongDao extends Component {
   render() {
     return (
       <>
         <Header />
-        <Game />
+        <Game boardType="huarongDao" />
         <Footer />
       </>
     );
   }
 }
 
-export default HuaRongDao;
+export default HuarongDao;

@@ -14,7 +14,8 @@ class Board extends Component {
       solved: false,
       board: [],
       readyToShuffle: true,
-      readyToSolve: true
+      readyToSolve: true,
+      isEditable: false
     };
   }
 
@@ -34,6 +35,8 @@ class Board extends Component {
         if (i === boardSize - 1 && j === boardSize - 1) {
           tileId = 0;
           this.tileStyles[tileId] = {
+            width: "inherit",
+            height: "inherit",
             background: "white",
             cursor: "default"
           };
@@ -42,8 +45,8 @@ class Board extends Component {
           let x = j * weight;
           let y = i * weight;
           this.tileStyles[id] = {
-            width: 580 / boardSize,
-            height: 580 / boardSize,
+            width: "inherit",
+            height: "inherit",
             backgroundPosition: x + "% " + y + "%",
             backgroundSize: boardSize * 100 + "%"
           };
@@ -173,7 +176,7 @@ class Board extends Component {
   }
 
   solve = async () => {
-    await this.setState({ readyToShuffle: false, readyToSolve: false });
+    await this.setState({ readyToShuffle: false, readyToSolve: false, isEditable: false });
     const { board } = this.state;
     const { boardSize } = this.props;
 
@@ -192,6 +195,8 @@ class Board extends Component {
           await this.setState({ board: res["steps"][i]});
           await sleep(80);
         }
+      } else {
+        alert("Current puzzle is not solvable");
       }
     } catch(e) {
       // TODO: exception handling
@@ -200,16 +205,62 @@ class Board extends Component {
     await this.setState({ readyToShuffle: true, readyToSolve: true });
   }
 
+  inHand = null;
+
+  setInHand = (element) => {
+    if (element.nodeName !== "DIV") return;
+    this.inHand = element;
+  }
+
+  unsetInHand = () => {
+    this.inHand = null;
+  }
+
+  setEditable = (isEditable) => {
+    this.setState({ 
+      readyToShuffle: !isEditable,
+      readyToSolve: !isEditable,
+      isEditable
+    });
+  }
+
   render() {
+    const { boardSize } = this.props;
     const { board, solved } = this.state;
+
     let rows = board.map((cells, i) => {
       let row = cells.map((cell, j) => {
         return (
-          <td key={j}>
+          <td style={{ width: 580/boardSize, height: 580/boardSize }}
+            key={j}
+            onDrop={(e) => {
+              if (!this.state.isEditable) return;
+              e.target.classList.remove('hovered');
+              if (e.target === this.inHand) return;
+              let sourId = parseInt(this.inHand.id);
+              let destId = parseInt(e.target.id);
+              this.swapTiles(this.getTileById(sourId), this.getTileById(destId));
+            }}
+            onDragEnter={(e) => {
+              if (!this.state.isEditable) return;
+              e.target.classList.add('hovered');
+            }}
+            onDragOver={(e) => {
+              if (!this.state.isEditable) return;
+              e.preventDefault();
+            }}
+            onDragLeave={(e) => {
+              if (!this.state.isEditable) return;
+              e.target.classList.remove('hovered');
+            }}
+          >
             <PuzzlePiece
               id={board[i][j]}
               tileStyle={this.tileStyles[board[i][j]]}
               moveTile={this.moveTile}
+              isEditable={this.state.isEditable}
+              setInHand={this.setInHand}
+              unsetInHand={this.unsetInHand}
             />
           </td>
         );
@@ -226,6 +277,8 @@ class Board extends Component {
       );
     }
 
+    let editButtonText = this.state.isEditable ? "Finish Edit" : "Edit Puzzle";
+
     return (
       <div className="board">
         <table>
@@ -234,13 +287,20 @@ class Board extends Component {
         <br />
         <button style={{marginRight: 10}}
           onClick={() => {
+            this.setEditable(!this.state.isEditable);
+          }}
+        >
+          {editButtonText}
+        </button>
+        <button style={{marginRight: 10}}
+          onClick={() => {
             this.shuffle();
           }}
           disabled={!this.state.readyToShuffle}
         >
           Shuffle Puzzle
         </button>
-        <button style={{marginLeft: 10}}
+        <button style={{}}
           onClick={() => {
             this.solve();
           }}

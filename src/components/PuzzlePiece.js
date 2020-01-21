@@ -19,6 +19,17 @@ class PuzzlePiece extends Component {
         onClick={() => {
           this.props.moveTile(this.props.id);
         }}
+        draggable="true"
+        onDragStart={(e) => {
+          if (!this.props.isEditable) return;
+          this.props.setInHand(e.target);
+          e.target.classList.add("in-hand");
+        }}
+        onDragEnd={(e) => {
+          if (!this.props.isEditable) return;
+          this.props.unsetInHand();
+          e.target.classList.remove("in-hand");
+        }}
       ></div>
     );
   }

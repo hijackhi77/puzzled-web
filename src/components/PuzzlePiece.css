@@ -3,3 +3,7 @@
   background: url(../assets/puzzle-image1.jpg);
   cursor: pointer;
 }
+.hovered {
+  outline: dashed #000 2px;
+  opacity: 0.5;
+}

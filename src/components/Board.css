@@ -5,3 +5,9 @@
   border-spacing: 0;
   display: inline-block;
 }
+.board .buttons {
+  padding: 10px;
+}
+.board .buttons button {
+  margin: 5px;
+}

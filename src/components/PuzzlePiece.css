@@ -1,6 +1,7 @@
 .puzzle-piece {
   display: table-cell;
-  background: url(../assets/puzzle-image1.jpg);
+  width: inherit;
+  height: inherit;
   cursor: pointer;
 }
 .hovered {

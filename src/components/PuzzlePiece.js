@@ -1,15 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import "./PuzzlePiece.css";
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import "./PuzzlePiece.css"
 
 class PuzzlePiece extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      picUrl: props.picUrl
-    };
-  }
-
   render() {
     return (
       <div
@@ -17,27 +10,30 @@ class PuzzlePiece extends Component {
         style={this.props.tileStyle}
         id={this.props.id}
         onClick={() => {
-          this.props.moveTile(this.props.id);
+          this.props.handleClick(this.props.pos)
         }}
         draggable="true"
-        onDragStart={(e) => {
-          if (!this.props.isEditable) return;
-          this.props.setInHand(e.target);
-          e.target.classList.add("in-hand");
+        onDragStart={e => {
+          this.props.handleDragStart(e.target)
         }}
-        onDragEnd={(e) => {
-          if (!this.props.isEditable) return;
-          this.props.unsetInHand();
-          e.target.classList.remove("in-hand");
+        onDragEnd={e => {
+          this.props.handleDragEnd()
         }}
-      ></div>
-    );
+      >
+        {this.props.displayText}
+      </div>
+    )
   }
 }
 
 PuzzlePiece.propTypes = {
   id: PropTypes.number.isRequired,
-  picUrl: PropTypes.object
-};
+  pos: PropTypes.object.isRequired,
+  displayText: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  tileStyle: PropTypes.object,
+  handleClick: PropTypes.func,
+  handleDragStart: PropTypes.func,
+  handleDragEnd: PropTypes.func
+}
 
-export default PuzzlePiece;
+export default PuzzlePiece

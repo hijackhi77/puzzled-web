@@ -77,7 +77,7 @@ class HuarongDaoBoard extends Component {
         upLeft,
         new Posn(upLeft.row, upLeft.col + 1),
         new Posn(upLeft.row + 1, upLeft.col),
-        new Posn(upLeft.row + 1, upLeft.col),
+        new Posn(upLeft.row + 1, upLeft.col + 1),
       ]
     } else if (id === 2 || id === 3 || id === 4 || id === 5) {
       tiles = [upLeft, new Posn(upLeft.row + 1, upLeft.col)]
@@ -330,7 +330,7 @@ class HuarongDaoBoard extends Component {
         return (
           <td style={{ width: 100, height: 100 }} key={j}>
             <PuzzlePiece
-              id={i + "-" + j}
+              tileId={i + "-" + j}
               pos={{ row: i, col: j }}
               tileStyle={tileStyles[i][j]}
               displayText={board[i][j]}

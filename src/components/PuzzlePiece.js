@@ -13,10 +13,10 @@ class PuzzlePiece extends Component {
           this.props.handleClick(this.props.pos)
         }}
         draggable="true"
-        onDragStart={e => {
+        onDragStart={(e) => {
           this.props.handleDragStart(e.target)
         }}
-        onDragEnd={e => {
+        onDragEnd={(e) => {
           this.props.handleDragEnd()
         }}
       >
@@ -27,13 +27,13 @@ class PuzzlePiece extends Component {
 }
 
 PuzzlePiece.propTypes = {
-  id: PropTypes.number.isRequired,
+  tileId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
   pos: PropTypes.object.isRequired,
   displayText: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   tileStyle: PropTypes.object,
   handleClick: PropTypes.func,
   handleDragStart: PropTypes.func,
-  handleDragEnd: PropTypes.func
+  handleDragEnd: PropTypes.func,
 }
 
 export default PuzzlePiece

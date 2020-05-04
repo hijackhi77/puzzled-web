@@ -29,6 +29,7 @@ class HuarongDaoBoard extends Component {
   init = () => {
     const { height, width } = this.state
     // Initialize title styles
+    this.tileStylesTracker = []
     const baseTileStyle = {}
     for (let i = 0; i < height; ++i) {
       let rowStyles = []
@@ -37,6 +38,10 @@ class HuarongDaoBoard extends Component {
       }
       this.tileStylesTracker.push(rowStyles)
     }
+
+    // Clear all previous candidates infomation
+    this.clearCandidates()
+
     // Initialize starting board config
     // TODO: add custom board configs
     const baseBoard = [

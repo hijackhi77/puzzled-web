@@ -16,7 +16,7 @@ class Board extends Component {
       board: [],
       readyToShuffle: true,
       readyToSolve: true,
-      isEditable: false
+      isEditable: false,
     }
   }
 
@@ -37,7 +37,7 @@ class Board extends Component {
           tileId = 0
           this.tileStyles[tileId] = {
             background: "white",
-            cursor: "default"
+            cursor: "default",
           }
         } else {
           let weight = 100 / (boardSize - 1)
@@ -46,7 +46,7 @@ class Board extends Component {
           this.tileStyles[id] = {
             background: "url(" + bgImg + ")",
             backgroundPosition: x + "% " + y + "%",
-            backgroundSize: boardSize * 100 + "%"
+            backgroundSize: boardSize * 100 + "%",
           }
         }
         row.push(tileId)
@@ -56,7 +56,7 @@ class Board extends Component {
     this.setState({ board: board })
   }
 
-  getTileById = id => {
+  getTileById = (id) => {
     const { board } = this.state
     const { boardSize } = this.props
     for (let i = 0; i < boardSize; ++i) {
@@ -88,11 +88,11 @@ class Board extends Component {
     return movables
   }
 
-  isMovable = pos => {
+  isMovable = (pos) => {
     const { board } = this.state
     if (board[pos.row][pos.col] === 0) return false
     let movables = this.getMovables()
-    return movables.some(e => {
+    return movables.some((e) => {
       return e.row === pos.row && e.col === pos.col
     })
   }
@@ -105,10 +105,7 @@ class Board extends Component {
     this.setState({ board })
   }
 
-  moveTile = async pos => {
-    console.log(pos)
-    // if (id === 0) return;
-    // let pos = this.getTileById(id);
+  moveTile = async (pos) => {
     if (!this.isMovable(pos)) return
     await this.swapTiles(pos, this.getTileById(0))
     this.setState({ solved: this.isGoalState() })
@@ -128,7 +125,6 @@ class Board extends Component {
           boardCopy[row2][col2] = temp
         }
       }
-      console.log(boardCopy)
     } while (!this.isSovable(boardCopy))
     this.setState({ board: boardCopy, readyToShuffle: true })
   }
@@ -148,7 +144,7 @@ class Board extends Component {
     return true
   }
 
-  getNumInversions = puzzle => {
+  getNumInversions = (puzzle) => {
     let flatPuzzle = flatten(puzzle)
     let numInv = 0
     for (let i = 0; i < flatPuzzle.length; ++i) {
@@ -161,7 +157,7 @@ class Board extends Component {
     return numInv
   }
 
-  isSovable = puzzle => {
+  isSovable = (puzzle) => {
     // Reference: https://www.geeksforgeeks.org/check-instance-15-puzzle-solvable/
     let size = puzzle.length
     let numInv = this.getNumInversions(puzzle)
@@ -179,7 +175,7 @@ class Board extends Component {
     await this.setState({
       readyToShuffle: false,
       readyToSolve: false,
-      isEditable: false
+      isEditable: false,
     })
     const { board } = this.state
     const { boardSize } = this.props
@@ -189,12 +185,11 @@ class Board extends Component {
     let data = {
       method: "astar",
       puzzle: JSON.stringify(board),
-      size: boardSize
+      size: boardSize,
     }
     try {
       let res = await axios.post(url, data)
       res = JSON.parse(res.request.response)
-      console.log(res)
       if (res["able_to_solve"]) {
         for (let i = res["steps"].length - 1; i >= 0; --i) {
           await this.setState({ board: res["steps"][i] })
@@ -212,7 +207,7 @@ class Board extends Component {
 
   inHand = null
 
-  setInHand = element => {
+  setInHand = (element) => {
     if (element.nodeName !== "DIV") return
     this.inHand = element
   }
@@ -221,11 +216,11 @@ class Board extends Component {
     this.inHand = null
   }
 
-  setEditable = isEditable => {
+  setEditable = (isEditable) => {
     this.setState({
       readyToShuffle: !isEditable,
       readyToSolve: !isEditable,
-      isEditable
+      isEditable,
     })
   }
 
@@ -239,7 +234,7 @@ class Board extends Component {
           <td
             style={{ width: 580 / boardSize, height: 580 / boardSize }}
             key={j}
-            onDrop={e => {
+            onDrop={(e) => {
               if (!this.state.isEditable) return
               e.target.classList.remove("hovered")
               if (e.target === this.inHand) return
@@ -247,21 +242,21 @@ class Board extends Component {
               let destId = parseInt(e.target.id)
               this.swapTiles(this.getTileById(sourId), this.getTileById(destId))
             }}
-            onDragEnter={e => {
+            onDragEnter={(e) => {
               if (!this.state.isEditable) return
               e.target.classList.add("hovered")
             }}
-            onDragOver={e => {
+            onDragOver={(e) => {
               if (!this.state.isEditable) return
               e.preventDefault()
             }}
-            onDragLeave={e => {
+            onDragLeave={(e) => {
               if (!this.state.isEditable) return
               e.target.classList.remove("hovered")
             }}
           >
             <PuzzlePiece
-              id={board[i][j]}
+              tileId={board[i][j]}
               pos={{ row: i, col: j }}
               tileStyle={this.tileStyles[board[i][j]]}
               handleClick={this.moveTile}
@@ -327,7 +322,7 @@ class Board extends Component {
 }
 
 Board.propTypes = {
-  boardSize: PropTypes.number.isRequired
+  boardSize: PropTypes.number.isRequired,
 }
 
 export default Board

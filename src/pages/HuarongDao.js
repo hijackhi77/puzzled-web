@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import Header from "../components/Header";
-import Game from "../components/Game";
-import Footer from "../components/Footer";
+import React, { Component } from "react"
+import Header from "../components/Header"
+import Game from "../components/Game"
+import Footer from "../components/Footer"
 
 class HuarongDao extends Component {
   render() {
@@ -11,8 +11,8 @@ class HuarongDao extends Component {
         <Game boardType="huarongDao" />
         <Footer />
       </>
-    );
+    )
   }
 }
 
-export default HuarongDao;
+export default HuarongDao

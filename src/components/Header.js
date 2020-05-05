@@ -11,6 +11,7 @@ class Header extends Component {
           <Nav className="mr-auto">
             <Nav.Link href="/">Home</Nav.Link>
             <Nav.Link href="hua-rong-dao">Huarong Dao</Nav.Link>
+            <Nav.Link href="eight-queens-puzzle">8 Queens</Nav.Link>
           </Nav>
           <Form inline>
             <FormControl type="text" placeholder="Search" className="mr-sm-2" />

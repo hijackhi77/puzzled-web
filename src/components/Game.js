@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import Board from "../components/Board"
 import HuarongDaoBoard from "../components/HuarongDaoBoard"
+import EightQueensBoard from "./EightQueensBoard"
 
 class Game extends Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class Game extends Component {
 
     if (this.props.boardType === "puzzle") {
       this.state.boardSize = 3
-      this.setBoardSize = async e => {
+      this.setBoardSize = async (e) => {
         await this.setState({ boardSize: parseInt(e.target.value) })
         await this.refs.child.init()
       }
@@ -45,6 +46,8 @@ class Game extends Component {
       )
     } else if (this.props.boardType === "huarongDao") {
       children = <HuarongDaoBoard />
+    } else if (this.props.boardType === "eightQueens") {
+      children = <EightQueensBoard />
     }
 
     return <div className="game">{children}</div>

@@ -4,56 +4,142 @@ import { deepcopy } from "../lib/utils.js"
 import Posn from "../lib/Posn.js"
 import queenImg from "../assets/queen.png"
 
-const queenTileStyle = {
+const queenTileStyle: React.CSSProperties = {
   background: "url(" + queenImg + ")",
   backgroundRepeat: "no-repeat",
   backgroundSize: "100%",
 }
 
-type EightQueensBoardState = {
+type EightQueensBoardProps = {
   size: number
-  queens: Posn[]
-  solved: boolean
 }
 
-class EightQueensBoard extends Component<any, EightQueensBoardState> {
-  constructor(props: any) {
+type EightQueensBoardState = {
+  queens: Posn[]
+  tileStyles: React.CSSProperties[][]
+}
+
+class EightQueensBoard extends Component<
+  EightQueensBoardProps,
+  EightQueensBoardState
+> {
+  tileStylesTracker: React.CSSProperties[][] = []
+
+  constructor(props: EightQueensBoardProps) {
     super(props)
+    const { size } = this.props
+    for (let i = 0; i < size; ++i) {
+      let rowStyles: React.CSSProperties[] = []
+      for (let j = 0; j < size; ++j) rowStyles.push({})
+      this.tileStylesTracker.push(rowStyles)
+    }
     this.state = {
-      size: 4,
       queens: [],
-      solved: false,
+      tileStyles: this.tileStylesTracker,
     }
   }
 
-  init = () => {
+  init = (): void => {
+    const { size } = this.props
+    this.tileStylesTracker = []
+    for (let i = 0; i < size; ++i) {
+      let rowStyles: React.CSSProperties[] = []
+      for (let j = 0; j < size; ++j) rowStyles.push({})
+      this.tileStylesTracker.push(rowStyles)
+    }
+
     this.setState({
       queens: [],
-      solved: false,
+      tileStyles: this.tileStylesTracker,
     })
   }
 
-  isAQueen = (pos: Posn) => {
+  isAQueen = (pos: Posn): boolean => {
     return Posn.includes(pos, this.state.queens)
   }
 
-  setQueen = (pos: Posn) => {
+  setQueen = (pos: Posn): void => {
     if (this.isAQueen(pos)) return
     const { queens } = this.state
     let newQueens = deepcopy(queens)
     newQueens.push(pos)
-    this.setState({ queens: newQueens })
+    this.tileStylesTracker[pos.row][pos.col] = queenTileStyle
+    this.setState({
+      queens: newQueens,
+      tileStyles: this.tileStylesTracker,
+    })
   }
 
-  unsetQueen = (pos: Posn) => {
+  unsetQueen = (pos: Posn): void => {
     if (!this.isAQueen(pos)) return
     const { queens } = this.state
     let newQueens = []
     for (let queen of queens) {
       if (!Posn.isEqual(queen, pos)) newQueens.push(queen)
     }
-    this.setState({ queens: newQueens })
+    this.tileStylesTracker[pos.row][pos.col] = {}
+    this.setState({
+      queens: newQueens,
+      tileStyles: this.tileStylesTracker,
+    })
   }
+
+  getCol = (pos: Posn): Posn[] => {
+    const { size } = this.props
+    let posArray: Posn[] = []
+    for (let i = 0; i < size; ++i) {
+      posArray.push(new Posn(pos.col, i))
+    }
+    return posArray
+  }
+
+  getRow = (pos: Posn): Posn[] => {
+    const { size } = this.props
+    let posArray: Posn[] = []
+    for (let i = 0; i < size; ++i) {
+      posArray.push(new Posn(i, pos.row))
+    }
+    return posArray
+  }
+
+  getDiagonal = (pos: Posn): Posn[] => {
+    const { size } = this.props
+    let posArray: Posn[] = []
+    let i = pos.row
+    let j = pos.col
+    while (i > 0 && j > 0) {
+      --i
+      --j
+    }
+    while (i < size && j < size) posArray.push(new Posn(i++, j++))
+    return posArray
+  }
+
+  isSolved = () => {
+    const { queens } = this.state
+    const { size } = this.props
+    // Check number of queens
+    if (queens.length !== size) return false
+    // Check row, col, and diagonal conflict
+    let rowSeen = new Set()
+    let colSeen = new Set()
+    let diagonals = []
+    for (let queen of queens) {
+      rowSeen.add(queen.row)
+      colSeen.add(queen.col)
+      diagonals.push(this.getDiagonal(queen))
+      for (let diagnal of diagonals.slice(0, -1)) {
+        for (let pos of diagnal) {
+          if (Posn.isEqual(pos, queen)) return false
+        }
+      }
+    }
+    return rowSeen.size === size && colSeen.size === size
+  }
+
+  // TODO: highlightTile = (pos: Posn) => {}
+
+  // TODO: unhighlightTile = (pos: Posn) => {}
 
   toggleQueen = (pos: Posn) => {
     if (this.isAQueen(pos)) {
@@ -61,28 +147,15 @@ class EightQueensBoard extends Component<any, EightQueensBoardState> {
     } else {
       this.setQueen(pos)
     }
-    console.log(this.state.queens)
-  }
-
-  isSolved = () => {
-    const { size, queens } = this.state
-    if (queens.length !== 4) return false
-    let rowSeen = new Set()
-    let colSeen = new Set()
-    for (let queen of queens) {
-      rowSeen.add(queen.row)
-      colSeen.add(queen.col)
-    }
-    return rowSeen.size === size && colSeen.size === size
   }
 
   render() {
-    const { size } = this.state
+    const { size } = this.props
+    const { tileStyles } = this.state
     let rows = []
     for (let i = 0; i < size; ++i) {
       let tableDatas = []
       for (let j = 0; j < size; ++j) {
-        let tileStyle = this.isAQueen(new Posn(i, j)) ? queenTileStyle : {}
         tableDatas.push(
           <td
             style={{
@@ -95,7 +168,7 @@ class EightQueensBoard extends Component<any, EightQueensBoardState> {
             <PuzzlePiece
               tileId={i + "-" + j}
               pos={new Posn(i, j)}
-              tileStyle={tileStyle}
+              tileStyle={tileStyles[i][j]}
               handleClick={this.toggleQueen}
               handleDragStart={() => {}}
               handleDragEnd={() => {}}

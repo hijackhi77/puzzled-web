@@ -1,0 +1,9 @@
+.game {
+  text-align: center;
+}
+.game .game-buttons {
+  padding: 10px;
+}
+.game .game-buttons label {
+  margin: 5px;
+}
